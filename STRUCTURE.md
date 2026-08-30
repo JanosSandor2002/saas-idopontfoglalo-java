@@ -4,7 +4,7 @@
 
 > This is a **target picture** of what the project will look like once every module is done.
 > As of 2026-08-30, only `naptar/entity`, `naptar/repository`, `naptar/service`,
-> `naptar/controller` (for `Szolgaltatas` only) and `common/exception` actually exist.
+> `naptar/controller` (for `SzolgaltatasEntity` only) and `common/exception` actually exist.
 > Everything else will be filled in gradually as we go through the learning process.
 
 ```

@@ -4,7 +4,7 @@
 
 > Ez egy **célkép** arra, hogyan nézzen ki a projekt, amikor minden modul készen van.
 > Jelenleg (2026.08.30-i állapot) csak a `naptar/entity`, `naptar/repository`, `naptar/service`,
-> `naptar/controller` (csak `Szolgaltatas`-hoz) és a `common/exception` létezik ténylegesen.
+> `naptar/controller` (csak `SzolgaltatasEntity`-hoz) és a `common/exception` létezik ténylegesen.
 > Mindent fokozatosan töltünk fel, ahogy haladunk a tanulásban.
 
 ```

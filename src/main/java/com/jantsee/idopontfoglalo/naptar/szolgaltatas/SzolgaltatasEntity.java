@@ -1,4 +1,4 @@
-package com.jantsee.idopontfoglalo.naptar.entity;
+package com.jantsee.idopontfoglalo.naptar.szolgaltatas;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Szolgaltatas {
+public class SzolgaltatasEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,6 +32,4 @@ public class Szolgaltatas {
 
     @Column(nullable = false)
     private Integer ar;
-
-
 }

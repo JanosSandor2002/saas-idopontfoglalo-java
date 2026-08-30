@@ -1,7 +1,5 @@
-package com.jantsee.idopontfoglalo.naptar.controller;
+package com.jantsee.idopontfoglalo.naptar.szolgaltatas;
 
-import com.jantsee.idopontfoglalo.naptar.entity.Szolgaltatas;
-import com.jantsee.idopontfoglalo.naptar.service.SzolgaltatasService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,17 +20,17 @@ public class SzolgaltatasController {
     }
 
     @PostMapping
-    public Szolgaltatas letrehozas(@RequestBody Szolgaltatas uj) {
+    public SzolgaltatasEntity letrehozas(@RequestBody SzolgaltatasEntity uj) {
         return szolgaltatasService.letrehozas(uj);
     }
 
     @GetMapping
-    public List<Szolgaltatas> osszes() {
+    public List<SzolgaltatasEntity> osszes() {
         return szolgaltatasService.osszesLekerese();
     }
 
     @GetMapping("/{id}")
-    public Szolgaltatas egyLekerese(@PathVariable Long id) {
+    public SzolgaltatasEntity egyLekerese(@PathVariable Long id) {
         return szolgaltatasService.lekeresIdAlapjan(id);
     }
 }
