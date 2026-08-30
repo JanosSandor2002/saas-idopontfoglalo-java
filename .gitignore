@@ -35,3 +35,5 @@ build/
 ### Titkok ###
 application-local.properties
 .env
+helper_java.sh
+helper.txt
