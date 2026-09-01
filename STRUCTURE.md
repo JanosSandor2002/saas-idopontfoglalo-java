@@ -3,9 +3,10 @@
 # idopontfoglalo – Target Folder Structure
 
 > This is a **target picture** of what the project will look like once every module is done.
-> As of 2026-08-30, only `naptar/entity`, `naptar/repository`, `naptar/service`,
-> `naptar/controller` (for `SzolgaltatasEntity` only) and `common/exception` actually exist.
-> Everything else will be filled in gradually as we go through the learning process.
+> As of 2026-08-30, the project is being migrated from a layer-based structure
+> (`naptar/entity`, `naptar/repository`, ...) to a **feature-based** structure, one
+> sub-package per entity/aggregate, with `Entity` suffix on entity classes.
+> Only `naptar/szolgaltatas` is in progress; everything else is still a plan.
 
 ```
 saas-idopontfoglalo-java/
@@ -31,49 +32,44 @@ saas-idopontfoglalo-java/
 │   │   │   │   └── dto/
 │   │   │   │       └── ApiErrorResponse.java
 │   │   │   │
-│   │   │   ├── naptar/                              ← CALENDAR MODULE
-│   │   │   │   ├── entity/
-│   │   │   │   │   ├── Szolgaltatas.java
-│   │   │   │   │   ├── Munkavallalo.java
-│   │   │   │   │   ├── Foglalas.java
-│   │   │   │   │   └── FoglalasStatusz.java
-│   │   │   │   ├── repository/
+│   │   │   ├── naptar/                              ← CALENDAR MODULE (feature-based)
+│   │   │   │   ├── szolgaltatas/
+│   │   │   │   │   ├── SzolgaltatasEntity.java
 │   │   │   │   │   ├── SzolgaltatasRepository.java
-│   │   │   │   │   ├── MunkavallaloRepository.java
-│   │   │   │   │   └── FoglalasRepository.java
-│   │   │   │   ├── dto/
-│   │   │   │   │   ├── SzolgaltatasDto.java
-│   │   │   │   │   ├── MunkavallaloDto.java
-│   │   │   │   │   ├── FoglalasLetrehozasDto.java
-│   │   │   │   │   └── FoglalasValaszDto.java
-│   │   │   │   ├── mapper/
-│   │   │   │   │   ├── SzolgaltatasMapper.java
-│   │   │   │   │   ├── MunkavallaloMapper.java
-│   │   │   │   │   └── FoglalasMapper.java
-│   │   │   │   ├── service/
 │   │   │   │   │   ├── SzolgaltatasService.java
+│   │   │   │   │   ├── SzolgaltatasController.java
+│   │   │   │   │   ├── SzolgaltatasDto.java
+│   │   │   │   │   └── SzolgaltatasMapper.java
+│   │   │   │   │
+│   │   │   │   ├── munkavallalo/
+│   │   │   │   │   ├── MunkavallaloEntity.java
+│   │   │   │   │   ├── MunkavallaloRepository.java
 │   │   │   │   │   ├── MunkavallaloService.java
-│   │   │   │   │   └── FoglalasService.java
-│   │   │   │   └── controller/
-│   │   │   │       ├── SzolgaltatasController.java
-│   │   │   │       ├── MunkavallaloController.java
-│   │   │   │       └── FoglalasController.java
+│   │   │   │   │   ├── MunkavallaloController.java
+│   │   │   │   │   ├── MunkavallaloDto.java
+│   │   │   │   │   └── MunkavallaloMapper.java
+│   │   │   │   │
+│   │   │   │   └── foglalas/
+│   │   │   │       ├── FoglalasEntity.java
+│   │   │   │       ├── FoglalasStatusz.java
+│   │   │   │       ├── FoglalasRepository.java
+│   │   │   │       ├── FoglalasService.java
+│   │   │   │       ├── FoglalasController.java
+│   │   │   │       ├── FoglalasLetrehozasDto.java
+│   │   │   │       ├── FoglalasValaszDto.java
+│   │   │   │       └── FoglalasMapper.java
 │   │   │   │
-│   │   │   ├── ugyfel/                              ← CUSTOMER DATA MODULE
-│   │   │   │   ├── entity/
-│   │   │   │   │   ├── Ugyfel.java
-│   │   │   │   │   └── Megjegyzes.java
-│   │   │   │   ├── repository/
-│   │   │   │   │   └── UgyfelRepository.java
-│   │   │   │   ├── dto/
+│   │   │   ├── ugyfel/                              ← CUSTOMER DATA MODULE (feature-based)
+│   │   │   │   ├── ugyfel/
+│   │   │   │   │   ├── UgyfelEntity.java
+│   │   │   │   │   ├── UgyfelRepository.java
+│   │   │   │   │   ├── UgyfelService.java
+│   │   │   │   │   ├── UgyfelController.java
 │   │   │   │   │   ├── UgyfelDto.java
-│   │   │   │   │   └── UgyfelLetrehozasDto.java
-│   │   │   │   ├── mapper/
+│   │   │   │   │   ├── UgyfelLetrehozasDto.java
 │   │   │   │   │   └── UgyfelMapper.java
-│   │   │   │   ├── service/
-│   │   │   │   │   └── UgyfelService.java
-│   │   │   │   └── controller/
-│   │   │   │       └── UgyfelController.java
+│   │   │   │   └── megjegyzes/
+│   │   │   │       └── MegjegyzesEntity.java
 │   │   │   │
 │   │   │   ├── ertesites/                           ← NOTIFICATION MODULE
 │   │   │   │   ├── service/
@@ -85,15 +81,14 @@ saas-idopontfoglalo-java/
 │   │   │   │       ├── foglalas-visszaigazolas.html
 │   │   │   │       └── foglalas-emlekezteto.html
 │   │   │   │
-│   │   │   └── tranzakcio/                          ← TRANSACTION MODULE
-│   │   │       ├── entity/
-│   │   │       │   ├── Tranzakcio.java
-│   │   │       │   └── TranzakcioStatusz.java
-│   │   │       ├── repository/
-│   │   │       │   └── TranzakcioRepository.java
-│   │   │       ├── service/
-│   │   │       │   ├── PaymentService.java          ← interface
-│   │   │       │   └── BarionPaymentService.java
+│   │   │   └── tranzakcio/                          ← TRANSACTION MODULE (feature-based)
+│   │   │       ├── tranzakcio/
+│   │   │       │   ├── TranzakcioEntity.java
+│   │   │       │   ├── TranzakcioStatusz.java
+│   │   │       │   ├── TranzakcioRepository.java
+│   │   │       │   └── TranzakcioService.java        ← interface impl detail may move
+│   │   │       ├── PaymentService.java                ← interface
+│   │   │       ├── BarionPaymentService.java
 │   │   │       └── config/
 │   │   │           └── BarionConfig.java
 │   │   │
@@ -111,13 +106,13 @@ saas-idopontfoglalo-java/
 │   └── test/
 │       └── java/com/jantsee/idopontfoglalo/
 │           ├── naptar/
-│           │   ├── service/
+│           │   ├── szolgaltatas/
 │           │   │   ├── SzolgaltatasServiceTest.java
-│           │   │   └── FoglalasServiceTest.java
-│           │   └── controller/
-│           │       └── SzolgaltatasControllerTest.java
+│           │   │   └── SzolgaltatasControllerTest.java
+│           │   └── foglalas/
+│           │       └── FoglalasServiceTest.java
 │           ├── ugyfel/
-│           │   └── service/
+│           │   └── ugyfel/
 │           │       └── UgyfelServiceTest.java
 │           └── IdopontfoglaloApplicationTests.java   ← basic Spring Boot smoke test
 │
@@ -126,31 +121,52 @@ saas-idopontfoglalo-java/
     └── docker-compose.yml                             ← app + Postgres started together
 ```
 
+## Package layout: feature-based, not layer-based
+
+Inside each **module** (`naptar`, `ugyfel`, `ertesites`, `tranzakcio`), the code is grouped
+**by feature/entity**, not by technical layer. So instead of one `service/` folder holding
+every service in the module, each feature gets its own sub-package containing its entity,
+repository, service, controller, DTOs, and mapper together.
+
+Naming convention:
+- Entity classes get an explicit `Entity` suffix (e.g. `SzolgaltatasEntity`, `MunkavallaloEntity`),
+  to make it unmistakable at a glance which class is the JPA-mapped one, since it now sits
+  in the same package as its DTOs, repository, etc.
+- Repository, Service, Controller, DTO, Mapper keep their existing suffix convention
+  (`SzolgaltatasRepository`, `SzolgaltatasService`, ...).
+
 ## Module boundary rule
 
 A module may **only** call another module's `service` layer — never its `repository` or
-entity directly. Example: `naptar.FoglalasService` sends a confirmation through
+entity directly. Example: `naptar.foglalas.FoglalasService` sends a confirmation through
 `ertesites.NotificationService`, but never reaches into `ertesites`'s internal data structures.
+This rule is unchanged by the feature-based repackaging — it applies **between modules**, not
+between feature sub-packages of the same module.
 
-## What this structure adds compared to the earlier (naptar-only) map
+## What this structure adds compared to the earlier (layer-based) map
 
-1. **Profile-based configuration** (`application-dev.properties`, `application-prod.properties`) –
+1. **Feature-based packages within each module** – `szolgaltatas/`, `munkavallalo/`,
+   `foglalas/`, etc., each self-contained, instead of module-wide `entity/`, `repository/`,
+   `service/`, `controller/` folders.
+2. **`Entity` suffix on entity classes** – needed now that the entity lives in the same
+   package as its DTOs and mapper, to avoid ambiguity.
+3. **Profile-based configuration** (`application-dev.properties`, `application-prod.properties`) –
    alongside the shared `application.properties`, environment-specific overrides.
-2. **`src/test/java`** – the package structure mirrors `main`, module by module.
-3. **A full DTO + Mapper pair for every entity** – once an entity has a relationship to
+4. **`src/test/java`** – the package structure mirrors `main`, feature by feature.
+5. **A full DTO + Mapper pair for every entity** – once an entity has a relationship to
    another entity, the raw entity can no longer "leak" through the Controller.
-4. **`ertesites/template/`** – email templates (e.g. with Thymeleaf) that
+6. **`ertesites/template/`** – email templates (e.g. with Thymeleaf) that
    `EmailNotificationService` fills in with concrete data.
-5. **Docker (optional, at the end)** – app + Postgres started together with
+7. **Docker (optional, at the end)** – app + Postgres started together with
    `docker-compose`, only relevant if we get that far.
 
 ## Current state (2026-08-30)
 
-Files that actually exist:
-- `naptar/entity/Szolgaltatas.java`
-- `naptar/repository/SzolgaltatasRepository.java`
-- `naptar/service/SzolgaltatasService.java`
-- `naptar/controller/SzolgaltatasController.java`
+Files that actually exist (mid-migration to feature-based structure):
+- `naptar/entity/Szolgaltatas.java` *(being migrated to `naptar/szolgaltatas/SzolgaltatasEntity.java`)*
+- `naptar/repository/SzolgaltatasRepository.java` *(moving to `naptar/szolgaltatas/`)*
+- `naptar/service/SzolgaltatasService.java` *(moving to `naptar/szolgaltatas/`)*
+- `naptar/controller/SzolgaltatasController.java` *(moving to `naptar/szolgaltatas/`)*
 - `common/exception/GlobalExceptionHandler.java`
 
 Everything else in the structure above is still a plan.

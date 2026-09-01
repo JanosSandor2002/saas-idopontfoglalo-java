@@ -1,172 +1,86 @@
-[Magyar](./STRUCTURE.hu.md) | **English**
+# Appointment Booking Platform
 
-# idopontfoglalo – Target Folder Structure
+> 🇬🇧 **English** | [🇭🇺 Magyar](README.hu.md)
 
-> This is a **target picture** of what the project will look like once every module is done.
-> As of 2026-08-30, the project is being migrated from a layer-based structure
-> (`naptar/entity`, `naptar/repository`, ...) to a **feature-based** structure, one
-> sub-package per entity/aggregate, with `Entity` suffix on entity classes.
-> Only `naptar/szolgaltatas` is in progress; everything else is still a plan.
+---
 
-```
-saas-idopontfoglalo-java/
-│
-├── pom.xml
-├── README.md
-├── .gitignore
-│
-├── src/
-│   ├── main/
-│   │   ├── java/com/jantsee/idopontfoglalo/
-│   │   │   ├── IdopontfoglaloApplication.java
-│   │   │   │
-│   │   │   ├── common/                              ← shared code across modules
-│   │   │   │   ├── exception/
-│   │   │   │   │   ├── GlobalExceptionHandler.java
-│   │   │   │   │   ├── ResourceNotFoundException.java
-│   │   │   │   │   └── BusinessRuleException.java
-│   │   │   │   ├── config/
-│   │   │   │   │   ├── CorsConfig.java
-│   │   │   │   │   ├── OpenApiConfig.java
-│   │   │   │   │   └── SecurityConfig.java          ← once we re-add Security
-│   │   │   │   └── dto/
-│   │   │   │       └── ApiErrorResponse.java
-│   │   │   │
-│   │   │   ├── naptar/                              ← CALENDAR MODULE (feature-based)
-│   │   │   │   ├── szolgaltatas/
-│   │   │   │   │   ├── SzolgaltatasEntity.java
-│   │   │   │   │   ├── SzolgaltatasRepository.java
-│   │   │   │   │   ├── SzolgaltatasService.java
-│   │   │   │   │   ├── SzolgaltatasController.java
-│   │   │   │   │   ├── SzolgaltatasDto.java
-│   │   │   │   │   └── SzolgaltatasMapper.java
-│   │   │   │   │
-│   │   │   │   ├── munkavallalo/
-│   │   │   │   │   ├── MunkavallaloEntity.java
-│   │   │   │   │   ├── MunkavallaloRepository.java
-│   │   │   │   │   ├── MunkavallaloService.java
-│   │   │   │   │   ├── MunkavallaloController.java
-│   │   │   │   │   ├── MunkavallaloDto.java
-│   │   │   │   │   └── MunkavallaloMapper.java
-│   │   │   │   │
-│   │   │   │   └── foglalas/
-│   │   │   │       ├── FoglalasEntity.java
-│   │   │   │       ├── FoglalasStatusz.java
-│   │   │   │       ├── FoglalasRepository.java
-│   │   │   │       ├── FoglalasService.java
-│   │   │   │       ├── FoglalasController.java
-│   │   │   │       ├── FoglalasLetrehozasDto.java
-│   │   │   │       ├── FoglalasValaszDto.java
-│   │   │   │       └── FoglalasMapper.java
-│   │   │   │
-│   │   │   ├── ugyfel/                              ← CUSTOMER DATA MODULE (feature-based)
-│   │   │   │   ├── ugyfel/
-│   │   │   │   │   ├── UgyfelEntity.java
-│   │   │   │   │   ├── UgyfelRepository.java
-│   │   │   │   │   ├── UgyfelService.java
-│   │   │   │   │   ├── UgyfelController.java
-│   │   │   │   │   ├── UgyfelDto.java
-│   │   │   │   │   ├── UgyfelLetrehozasDto.java
-│   │   │   │   │   └── UgyfelMapper.java
-│   │   │   │   └── megjegyzes/
-│   │   │   │       └── MegjegyzesEntity.java
-│   │   │   │
-│   │   │   ├── ertesites/                           ← NOTIFICATION MODULE
-│   │   │   │   ├── service/
-│   │   │   │   │   ├── NotificationService.java     ← interface
-│   │   │   │   │   └── EmailNotificationService.java
-│   │   │   │   ├── config/
-│   │   │   │   │   └── MailConfig.java
-│   │   │   │   └── template/
-│   │   │   │       ├── foglalas-visszaigazolas.html
-│   │   │   │       └── foglalas-emlekezteto.html
-│   │   │   │
-│   │   │   └── tranzakcio/                          ← TRANSACTION MODULE (feature-based)
-│   │   │       ├── tranzakcio/
-│   │   │       │   ├── TranzakcioEntity.java
-│   │   │       │   ├── TranzakcioStatusz.java
-│   │   │       │   ├── TranzakcioRepository.java
-│   │   │       │   └── TranzakcioService.java        ← interface impl detail may move
-│   │   │       ├── PaymentService.java                ← interface
-│   │   │       ├── BarionPaymentService.java
-│   │   │       └── config/
-│   │   │           └── BarionConfig.java
-│   │   │
-│   │   └── resources/
-│   │       ├── application.properties               ← shared/base settings
-│   │       ├── application-dev.properties            ← local development
-│   │       ├── application-prod.properties            ← production
-│   │       └── db/migration/                          ← Flyway migrations
-│   │           ├── V1__create_szolgaltatasok_table.sql
-│   │           ├── V2__create_munkavallalok_table.sql
-│   │           ├── V3__create_ugyfelek_table.sql
-│   │           ├── V4__create_foglalasok_table.sql
-│   │           └── V5__create_tranzakciok_table.sql
-│   │
-│   └── test/
-│       └── java/com/jantsee/idopontfoglalo/
-│           ├── naptar/
-│           │   ├── szolgaltatas/
-│           │   │   ├── SzolgaltatasServiceTest.java
-│           │   │   └── SzolgaltatasControllerTest.java
-│           │   └── foglalas/
-│           │       └── FoglalasServiceTest.java
-│           ├── ugyfel/
-│           │   └── ugyfel/
-│           │       └── UgyfelServiceTest.java
-│           └── IdopontfoglaloApplicationTests.java   ← basic Spring Boot smoke test
-│
-└── (optional, once we get there)
-    ├── Dockerfile
-    └── docker-compose.yml                             ← app + Postgres started together
-```
+## About the Project
 
-## Package layout: feature-based, not layer-based
+An online appointment booking platform designed for beauty-industry service providers such as hairdressers, beauticians, nail salons, and similar businesses.
 
-Inside each **module** (`naptar`, `ugyfel`, `ertesites`, `tranzakcio`), the code is grouped
-**by feature/entity**, not by technical layer. So instead of one `service/` folder holding
-every service in the module, each feature gets its own sub-package containing its entity,
-repository, service, controller, DTOs, and mapper together.
+The goal is to replace phone- and Messenger-based appointment coordination with a simple, self-service booking interface, reducing administrative work and last-minute cancellations (no-shows).
 
-Naming convention:
-- Entity classes get an explicit `Entity` suffix (e.g. `SzolgaltatasEntity`, `MunkavallaloEntity`),
-  to make it unmistakable at a glance which class is the JPA-mapped one, since it now sits
-  in the same package as its DTOs, repository, etc.
-- Repository, Service, Controller, DTO, Mapper keep their existing suffix convention
-  (`SzolgaltatasRepository`, `SzolgaltatasService`, ...).
+## Two Sides
 
-## Module boundary rule
+* **Salon owner/manager** – logs in, manages services, prices, working hours, and views bookings in an overview calendar.
+* **Customer** – can book an appointment through the salon's booking page without creating an account.
 
-A module may **only** call another module's `service` layer — never its `repository` or
-entity directly. Example: `naptar.foglalas.FoglalasService` sends a confirmation through
-`ertesites.NotificationService`, but never reaches into `ertesites`'s internal data structures.
-This rule is unchanged by the feature-based repackaging — it applies **between modules**, not
-between feature sub-packages of the same module.
+One account can be associated with multiple salons.
 
-## What this structure adds compared to the earlier (layer-based) map
+## Subscription Plans
 
-1. **Feature-based packages within each module** – `szolgaltatas/`, `munkavallalo/`,
-   `foglalas/`, etc., each self-contained, instead of module-wide `entity/`, `repository/`,
-   `service/`, `controller/` folders.
-2. **`Entity` suffix on entity classes** – needed now that the entity lives in the same
-   package as its DTOs and mapper, to avoid ambiguity.
-3. **Profile-based configuration** (`application-dev.properties`, `application-prod.properties`) –
-   alongside the shared `application.properties`, environment-specific overrides.
-4. **`src/test/java`** – the package structure mirrors `main`, feature by feature.
-5. **A full DTO + Mapper pair for every entity** – once an entity has a relationship to
-   another entity, the raw entity can no longer "leak" through the Controller.
-6. **`ertesites/template/`** – email templates (e.g. with Thymeleaf) that
-   `EmailNotificationService` fills in with concrete data.
-7. **Docker (optional, at the end)** – app + Postgres started together with
-   `docker-compose`, only relevant if we get that far.
+| Plan        | Included                                                                                                 |
+| ----------- | -------------------------------------------------------------------------------------------------------- |
+| **Basic**   | Calendar module (services, working hours, appointments)                                                  |
+| **Pro**     | + Notification module (email confirmations, reminders) + Online Transaction module (deposit/payment)     |
+| **Premium** | + SMS notifications, calendar synchronization + Web module (embeddable booking interface / mini website) |
 
-## Current state (2026-08-30)
+## Main Modules
 
-Files that actually exist (mid-migration to feature-based structure):
-- `naptar/entity/Szolgaltatas.java` *(being migrated to `naptar/szolgaltatas/SzolgaltatasEntity.java`)*
-- `naptar/repository/SzolgaltatasRepository.java` *(moving to `naptar/szolgaltatas/`)*
-- `naptar/service/SzolgaltatasService.java` *(moving to `naptar/szolgaltatas/`)*
-- `naptar/controller/SzolgaltatasController.java` *(moving to `naptar/szolgaltatas/`)*
-- `common/exception/GlobalExceptionHandler.java`
+* **Calendar Module** – management of services, working hours, available and booked time slots.
+* **Notification Module** – automated email (later SMS) communication between customers and salons, customer history and notes.
+* **Online Transaction Module** – requesting a deposit or full payment during booking through Barion to reduce no-shows.
+* **Web Module** – embedding the booking interface into an existing website or providing the salon with a simple dedicated mini website.
 
-Everything else in the structure above is still a plan.
+## Planned Technology
+
+* **Frontend:** Next.js
+* **Backend:** NestJS (modular architecture with modules enabled/disabled according to the subscription plan)
+* **Database:** MongoDB
+* **Payments:** Barion
+* **Email:** AWS SES
+* **Calendar synchronization:** One-way `.ics` feed for Google Calendar / Outlook
+
+## Milestones
+
+1. **Concept Development** – problem and target audience definition, feature list (MVP vs. future), user flows, wireframes, domain model, and final technology decisions.
+2. **Design → Architecture** – repository structure (monorepo: `apps/frontend`, `apps/backend`, `packages/shared`), API endpoint list, and initial database schema.
+3. **Development Environment** – pin Node.js version, Docker Compose (backend, frontend, database), `.env.example`, `.gitignore`.
+4. **Backend (NestJS) – with Tests** – project initialization, database connection (Mongoose), feature-based modules, implementation together with unit tests, JWT authentication and tests, DTOs and validation.
+5. **Frontend (Next.js) – with Tests** – project initialization, design system (Tailwind), API client layer, main pages (admin dashboard, customer interface), component and integration tests (e.g. React Testing Library).
+6. **Payment Integration (Barion) – with Tests** – sandbox account, `payment/start` and `payment/callback` endpoints, split-payment logic in the sandbox, unit and integration tests (successful, failed, and timeout cases), invoicing integration if required.
+7. **E2E Testing** – automated testing of the main user flows (registration → booking/purchase → payment), plus manual sandbox testing of the complete process.
+8. **CI/CD** – pipeline (lint → build → test) for every pull request, automated Docker image builds, and staging environment.
+9. **Production Environment** – server, domain, SSL, secure secret management, activation of the Barion production account, monitoring and logging (e.g. Sentry).
+10. **Launch** – onboarding the first real merchant, verifying the first live transaction, establishing a support channel, and continuous monitoring.
+
+## Current Status
+
+The project is currently in **Milestone 1 (Concept Development)**.
+
+The detailed feature list, user flows, domain model, and class architecture are available in the extended concept documentation.
+
+UI and wireframe design have **not yet started**.
+
+## License & Usage Restrictions
+
+**Copyright © 2026. All rights reserved.**
+
+This project and all of its contents, including but not limited to source code, documentation, designs, database structures, assets, and related materials, are proprietary and may not be used without explicit permission from the copyright holder.
+
+Unless prior written permission has been granted, you may **not**:
+
+* copy, reproduce, or redistribute the source code or any substantial part of it;
+* use the project or any part of it in another project;
+* modify, adapt, or create derivative works based on the project;
+* publish or make the source code publicly available;
+* use the project or any part of it for commercial purposes;
+* sell, sublicense, or otherwise distribute the project or derivative works;
+* present the project or any part of it as your own;
+* use the project's architecture, implementation, or proprietary materials for a competing product or service.
+
+Viewing, cloning, or accessing this repository does **not** grant any license or other rights to use the project's contents.
+
+Any use beyond personal inspection of the repository requires **explicit prior written permission from the copyright holder**.
+
+For permission requests, please contact the copyright holder.

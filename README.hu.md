@@ -1,173 +1,86 @@
-**Magyar** | [English](./STRUCTURE.md)
+# Időpontfoglaló Platform
 
-# idopontfoglalo – Cél-mappastruktúra
+> 🇭🇺 **Magyar** | [🇬🇧 English](README.md)
 
-> Ez egy **célkép** arra, hogyan nézzen ki a projekt, amikor minden modul készen van.
-> 2026.08.30-i állapot szerint a projekt réteg szerinti struktúráról
-> (`naptar/entity`, `naptar/repository`, ...) **feature szerinti** struktúrára áll át:
-> entitásonként/aggregátumonként egy alcsomag, `Entity` végződéssel az entitás osztályokon.
-> Jelenleg csak a `naptar/szolgaltatas` van átalakítás alatt, minden más még csak terv.
+---
 
-```
-saas-idopontfoglalo-java/
-│
-├── pom.xml
-├── README.md
-├── .gitignore
-│
-├── src/
-│   ├── main/
-│   │   ├── java/com/jantsee/idopontfoglalo/
-│   │   │   ├── IdopontfoglaloApplication.java
-│   │   │   │
-│   │   │   ├── common/                              ← modulokon átívelő, megosztott kód
-│   │   │   │   ├── exception/
-│   │   │   │   │   ├── GlobalExceptionHandler.java
-│   │   │   │   │   ├── ResourceNotFoundException.java
-│   │   │   │   │   └── BusinessRuleException.java
-│   │   │   │   ├── config/
-│   │   │   │   │   ├── CorsConfig.java
-│   │   │   │   │   ├── OpenApiConfig.java
-│   │   │   │   │   └── SecurityConfig.java          ← ha visszatesszük
-│   │   │   │   └── dto/
-│   │   │   │       └── ApiErrorResponse.java
-│   │   │   │
-│   │   │   ├── naptar/                              ← NAPTÁR MODUL (feature szerint)
-│   │   │   │   ├── szolgaltatas/
-│   │   │   │   │   ├── SzolgaltatasEntity.java
-│   │   │   │   │   ├── SzolgaltatasRepository.java
-│   │   │   │   │   ├── SzolgaltatasService.java
-│   │   │   │   │   ├── SzolgaltatasController.java
-│   │   │   │   │   ├── SzolgaltatasDto.java
-│   │   │   │   │   └── SzolgaltatasMapper.java
-│   │   │   │   │
-│   │   │   │   ├── munkavallalo/
-│   │   │   │   │   ├── MunkavallaloEntity.java
-│   │   │   │   │   ├── MunkavallaloRepository.java
-│   │   │   │   │   ├── MunkavallaloService.java
-│   │   │   │   │   ├── MunkavallaloController.java
-│   │   │   │   │   ├── MunkavallaloDto.java
-│   │   │   │   │   └── MunkavallaloMapper.java
-│   │   │   │   │
-│   │   │   │   └── foglalas/
-│   │   │   │       ├── FoglalasEntity.java
-│   │   │   │       ├── FoglalasStatusz.java
-│   │   │   │       ├── FoglalasRepository.java
-│   │   │   │       ├── FoglalasService.java
-│   │   │   │       ├── FoglalasController.java
-│   │   │   │       ├── FoglalasLetrehozasDto.java
-│   │   │   │       ├── FoglalasValaszDto.java
-│   │   │   │       └── FoglalasMapper.java
-│   │   │   │
-│   │   │   ├── ugyfel/                              ← ÜGYFÉLADATOK MODUL (feature szerint)
-│   │   │   │   ├── ugyfel/
-│   │   │   │   │   ├── UgyfelEntity.java
-│   │   │   │   │   ├── UgyfelRepository.java
-│   │   │   │   │   ├── UgyfelService.java
-│   │   │   │   │   ├── UgyfelController.java
-│   │   │   │   │   ├── UgyfelDto.java
-│   │   │   │   │   ├── UgyfelLetrehozasDto.java
-│   │   │   │   │   └── UgyfelMapper.java
-│   │   │   │   └── megjegyzes/
-│   │   │   │       └── MegjegyzesEntity.java
-│   │   │   │
-│   │   │   ├── ertesites/                           ← ÉRTESÍTÉS MODUL
-│   │   │   │   ├── service/
-│   │   │   │   │   ├── NotificationService.java     ← interfész
-│   │   │   │   │   └── EmailNotificationService.java
-│   │   │   │   ├── config/
-│   │   │   │   │   └── MailConfig.java
-│   │   │   │   └── template/
-│   │   │   │       ├── foglalas-visszaigazolas.html
-│   │   │   │       └── foglalas-emlekezteto.html
-│   │   │   │
-│   │   │   └── tranzakcio/                          ← TRANZAKCIÓ MODUL (feature szerint)
-│   │   │       ├── tranzakcio/
-│   │   │       │   ├── TranzakcioEntity.java
-│   │   │       │   ├── TranzakcioStatusz.java
-│   │   │       │   ├── TranzakcioRepository.java
-│   │   │       │   └── TranzakcioService.java
-│   │   │       ├── PaymentService.java                ← interfész
-│   │   │       ├── BarionPaymentService.java
-│   │   │       └── config/
-│   │   │           └── BarionConfig.java
-│   │   │
-│   │   └── resources/
-│   │       ├── application.properties               ← közös/alap beállítások
-│   │       ├── application-dev.properties            ← lokális fejlesztéshez
-│   │       ├── application-prod.properties            ← élesítéshez
-│   │       └── db/migration/                          ← Flyway migrációk
-│   │           ├── V1__create_szolgaltatasok_table.sql
-│   │           ├── V2__create_munkavallalok_table.sql
-│   │           ├── V3__create_ugyfelek_table.sql
-│   │           ├── V4__create_foglalasok_table.sql
-│   │           └── V5__create_tranzakciok_table.sql
-│   │
-│   └── test/
-│       └── java/com/jantsee/idopontfoglalo/
-│           ├── naptar/
-│           │   ├── szolgaltatas/
-│           │   │   ├── SzolgaltatasServiceTest.java
-│           │   │   └── SzolgaltatasControllerTest.java
-│           │   └── foglalas/
-│           │       └── FoglalasServiceTest.java
-│           ├── ugyfel/
-│           │   └── ugyfel/
-│           │       └── UgyfelServiceTest.java
-│           └── IdopontfoglaloApplicationTests.java   ← Spring Boot alap smoke test
-│
-└── (opcionális, ha idáig eljutunk)
-    ├── Dockerfile
-    └── docker-compose.yml                             ← app + Postgres együtt indítva
-```
+## A projektről
 
-## Csomagfelépítés: feature szerint, nem réteg szerint
+Online időpontfoglaló platform szépségipari szolgáltatók számára, például fodrászoknak, kozmetikusoknak, körömszalonoknak és hasonló vállalkozásoknak.
 
-Minden **modulon** (`naptar`, `ugyfel`, `ertesites`, `tranzakcio`) belül a kód
-**feature/entitás szerint** van csoportosítva, nem technikai réteg szerint. Tehát ahelyett,
-hogy egy `service/` mappa tartalmazná a modul összes service-ét, minden feature kap egy saját
-alcsomagot, amiben együtt van az entitása, repository-ja, service-e, controllere, DTO-i és
-mapperje.
+A cél, hogy a szalonok kiváltsák a telefonos és Messenger-alapú időpont-egyeztetést egy egyszerű, önkiszolgáló foglalási felülettel, ezáltal csökkentve az adminisztrációt és az utolsó pillanatos lemondásokat (no-show).
 
-Elnevezési konvenció:
-- Az entitás osztályok explicit `Entity` végződést kapnak (pl. `SzolgaltatasEntity`,
-  `MunkavallaloEntity`), hogy első pillantásra egyértelmű legyen, melyik osztály a
-  JPA-mappelt entitás, mivel most már ugyanabban a csomagban van, mint a DTO-i és mappere.
-- A Repository, Service, Controller, DTO, Mapper osztályok megtartják a meglévő
-  végződési konvenciójukat (`SzolgaltatasRepository`, `SzolgaltatasService`, ...).
+## Két oldal
 
-## Modulhatár-szabály
+* **Szalon tulajdonos/menedzser** – bejelentkezik, beállítja a szolgáltatásokat, árakat, munkarendet, valamint egy áttekintő naptárban kezeli a foglalásokat.
+* **Ügyfél** – fiók létrehozása nélkül, néhány kattintással foglalhat időpontot a szalon foglalási oldalán keresztül.
 
-Egy modul **csak** a másik modul `service` rétegét hívhatja meg – sosem a `repository`-ját
-vagy az entitását közvetlenül. Példa: a `naptar.foglalas.FoglalasService` visszaigazolást küld
-a `ertesites.NotificationService`-en keresztül, de sosem nyúl bele az `ertesites` modul belső
-adatszerkezetébe. Ez a szabály nem változik a feature szerinti átcsomagolással – **modulok
-között** érvényes, nem ugyanazon modul feature-alcsomagjai között.
+Egy fiókhoz több szalon is tartozhat.
 
-## Amit ez a struktúra hoz a korábbi (réteg szerinti) térképhez képest
+## Csomagszintek
 
-1. **Feature szerinti csomagok modulonként belül** – `szolgaltatas/`, `munkavallalo/`,
-   `foglalas/` stb., mindegyik önmagában zárt, a modul-szintű `entity/`, `repository/`,
-   `service/`, `controller/` mappák helyett.
-2. **`Entity` végződés az entitás osztályokon** – erre azért van szükség, mert az entitás
-   most már ugyanabban a csomagban van, mint a DTO-i és mapperje, elkerülve a félreértést.
-3. **Profil-alapú konfiguráció** (`application-dev.properties`, `application-prod.properties`) –
-   a közös `application.properties` mellett környezet-specifikus felülírások.
-4. **`src/test/java`** – a package-struktúra tükrözi a `main`-t, feature-önként.
-5. **Minden entitáshoz teljes DTO + Mapper pár** – amint egy entitásnak kapcsolata van
-   más entitással, a nyers entitás nem "szökhet ki" a Controlleren keresztül.
-6. **`ertesites/template/`** – e-mail sablonok (pl. Thymeleaf-fel), amikbe a
-   `EmailNotificationService` tölti be a konkrét adatokat.
-7. **Docker (opcionális, a végén)** – app + Postgres egyben indítva `docker-compose`-szal,
-   csak akkor aktuális, ha idáig eljutunk.
+| Csomag      | Amit tartalmaz                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------- |
+| **Alap**    | Naptár modul (szolgáltatások, munkarend, foglalás)                                                |
+| **Pro**     | + Értesítés modul (e-mail visszaigazolás, emlékeztető) + Online Tranzakció modul (előleg/fizetés) |
+| **Prémium** | + SMS értesítés, naptárszinkron + Web modul (beágyazható foglalófelület / mini weboldal)          |
 
-## Jelenlegi állapot (2026.08.30)
+## Fő modulok
 
-Ténylegesen létező fájlok (feature szerinti átalakítás közben):
-- `naptar/entity/Szolgaltatas.java` *(átalakítás alatt: `naptar/szolgaltatas/SzolgaltatasEntity.java`)*
-- `naptar/repository/SzolgaltatasRepository.java` *(költözik: `naptar/szolgaltatas/`)*
-- `naptar/service/SzolgaltatasService.java` *(költözik: `naptar/szolgaltatas/`)*
-- `naptar/controller/SzolgaltatasController.java` *(költözik: `naptar/szolgaltatas/`)*
-- `common/exception/GlobalExceptionHandler.java`
+* **Naptár modul** – szolgáltatások, munkaidő, szabad és foglalt időpontok kezelése.
+* **Értesítés modul** – automatikus e-mailes (később SMS-es) kommunikáció az ügyfél és a szalon között, ügyféltörténet és megjegyzések.
+* **Online Tranzakció modul** – előleg vagy teljes díj bekérése foglaláskor Barion integráción keresztül a no-show csökkentése érdekében.
+* **Web modul** – a foglalófelület beágyazása meglévő weboldalba, vagy egyszerű saját mini weboldal biztosítása a szalon számára.
 
-Minden más a fenti struktúrából még csak terv.
+## Tervezett technológia
+
+* **Frontend:** Next.js
+* **Backend:** NestJS (moduláris felépítés, csomagszint alapján be- és kikapcsolható modulokkal)
+* **Adatbázis:** MongoDB
+* **Fizetés:** Barion
+* **E-mail:** AWS SES
+* **Naptárszinkronizáció:** Egyirányú `.ics` feed Google Calendar / Outlook felé
+
+## Mérföldkövek
+
+1. **Koncepció kidolgozása** – probléma és célközönség meghatározása, funkciólista (MVP vs. jövőbeli), user flow, wireframe, domain modell és technológiai döntések véglegesítése.
+2. **Tervezés → Architektúra** – repository struktúra (monorepo: `apps/frontend`, `apps/backend`, `packages/shared`), API végpontok listája és az adatbázis-séma első vázlata.
+3. **Fejlesztői környezet** – Node.js verzió rögzítése, Docker Compose (backend, frontend, adatbázis), `.env.example`, `.gitignore`.
+4. **Backend (NestJS) – tesztekkel együtt** – projekt inicializálása, adatbázis-kapcsolat (Mongoose), feature-alapú modulok, implementáció unit tesztekkel együtt, JWT autentikáció és tesztek, DTO-k és validáció.
+5. **Frontend (Next.js) – tesztekkel együtt** – projekt inicializálása, design rendszer (Tailwind), API kliens réteg, fő oldalak (admin dashboard, ügyfélfelület), komponens- és integrációs tesztek (pl. React Testing Library).
+6. **Fizetési integráció (Barion) – tesztekkel együtt** – sandbox fiók, `payment/start` és `payment/callback` végpontok, split payment logika sandboxban, unit- és integrációs tesztek (sikeres, sikertelen és timeout esetek), számlázó integráció szükség esetén.
+7. **E2E tesztelés** – a fő user flow-k automatizált végigtesztelése (regisztráció → foglalás/vásárlás → fizetés), valamint a teljes folyamat manuális sandbox tesztelése.
+8. **CI/CD** – pipeline (lint → build → teszt) minden pull request esetén, Docker image build automatizálása és staging környezet.
+9. **Éles környezet** – szerver, domain, SSL beállítása, titkos kulcsok biztonságos kezelése, Barion élő fiók aktiválása, monitorozás és logolás (pl. Sentry).
+10. **Indulás** – első valódi kereskedő onboardolása, az első éles tranzakció ellenőrzése, support csatorna kialakítása és folyamatos monitorozás.
+
+## Jelenlegi státusz
+
+A projekt jelenleg az **1. mérföldkő (Koncepció kidolgozása)** fázisában van.
+
+A részletes funkciólista, user flow-k, domain modell és osztályarchitektúra a bővebb koncepciós dokumentációban található.
+
+A UI és a wireframe-ek tervezése **még nem kezdődött el**.
+
+## Licenc és felhasználási korlátozások
+
+**Copyright © 2026. Minden jog fenntartva.**
+
+A projekt és annak teljes tartalma – beleértve, de nem kizárólagosan a forráskódot, dokumentációt, terveket, adatbázis-struktúrákat, grafikai elemeket és kapcsolódó anyagokat – a szerző kizárólagos tulajdonát képezi, és kifejezett engedély nélkül nem használható fel.
+
+Előzetes írásbeli engedély nélkül **tilos**:
+
+* a forráskód vagy annak jelentős részének másolása, sokszorosítása vagy terjesztése;
+* a projekt vagy annak bármely részének más projektben történő felhasználása;
+* a projekt módosítása, átdolgozása vagy származékos mű készítése;
+* a forráskód nyilvánosságra hozatala vagy más módon történő közzététele;
+* a projekt vagy annak bármely részének kereskedelmi célú felhasználása;
+* a projekt vagy annak származékos változatainak értékesítése, licencelése vagy továbbadása;
+* a projekt vagy annak bármely részének saját munkaként való feltüntetése;
+* a projekt architektúrájának, megvalósításának vagy egyéb védett anyagainak felhasználása konkurens termék vagy szolgáltatás létrehozására.
+
+A repository megtekintése, klónozása vagy az ahhoz való hozzáférés **nem biztosít felhasználási licencet vagy egyéb jogot** a projekt tartalmának felhasználására.
+
+A repository személyes megtekintésén és tanulmányozásán túlmenő bármilyen felhasználáshoz a **jogtulajdonos előzetes, kifejezett írásbeli engedélye szükséges**.
+
+Engedélykéréssel kapcsolatban a jogtulajdonost kell megkeresni.
