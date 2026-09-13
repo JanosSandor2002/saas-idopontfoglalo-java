@@ -6,7 +6,8 @@
 > As of 2026-08-30, the project is being migrated from a layer-based structure
 > (`naptar/entity`, `naptar/repository`, ...) to a **feature-based** structure, one
 > sub-package per entity/aggregate, with `Entity` suffix on entity classes.
-> Only `naptar/szolgaltatas` is in progress; everything else is still a plan.
+> As of 2026-09-13, `naptar/szolgaltatas`, `naptar/munkavallalo`, `naptar/foglalas`,
+> and `ugyfel/ugyfel` are done; everything else is still a plan.
 
 ```
 saas-idopontfoglalo-java/
@@ -93,7 +94,7 @@ saas-idopontfoglalo-java/
 │   │   │           └── BarionConfig.java
 │   │   │
 │   │   └── resources/
-│   │       ├── application.properties               ← shared/base settings
+│   │       ├── application.properties               ← shared/base settings (PostgreSQL, from .env)
 │   │       ├── application-dev.properties            ← local development
 │   │       ├── application-prod.properties            ← production
 │   │       └── db/migration/                          ← Flyway migrations
@@ -104,17 +105,21 @@ saas-idopontfoglalo-java/
 │   │           └── V5__create_tranzakciok_table.sql
 │   │
 │   └── test/
-│       └── java/com/jantsee/idopontfoglalo/
-│           ├── naptar/
-│           │   ├── szolgaltatas/
-│           │   │   ├── SzolgaltatasServiceTest.java
-│           │   │   └── SzolgaltatasControllerTest.java
-│           │   └── foglalas/
-│           │       └── FoglalasServiceTest.java
-│           ├── ugyfel/
-│           │   └── ugyfel/
-│           │       └── UgyfelServiceTest.java
-│           └── IdopontfoglaloApplicationTests.java   ← basic Spring Boot smoke test
+│       ├── java/com/jantsee/idopontfoglalo/
+│       │   ├── naptar/
+│       │   │   ├── szolgaltatas/
+│       │   │   │   ├── SzolgaltatasServiceTest.java
+│       │   │   │   └── SzolgaltatasControllerTest.java
+│       │   │   ├── munkavallalo/
+│       │   │   │   └── MunkavallaloServiceTest.java
+│       │   │   └── foglalas/
+│       │   │       └── FoglalasServiceTest.java
+│       │   ├── ugyfel/
+│       │   │   └── ugyfel/
+│       │   │       └── UgyfelServiceTest.java
+│       │   └── IdopontfoglaloApplicationTests.java   ← basic Spring Boot smoke test
+│       └── resources/
+│           └── application.properties                ← test override: H2 in-memory database
 │
 └── (optional, once we get there)
     ├── Dockerfile
@@ -152,21 +157,30 @@ between feature sub-packages of the same module.
    package as its DTOs and mapper, to avoid ambiguity.
 3. **Profile-based configuration** (`application-dev.properties`, `application-prod.properties`) –
    alongside the shared `application.properties`, environment-specific overrides.
-4. **`src/test/java`** – the package structure mirrors `main`, feature by feature.
-5. **A full DTO + Mapper pair for every entity** – once an entity has a relationship to
+4. **`src/test/resources/application.properties`** – overrides the PostgreSQL/`.env`-based
+   config in `src/main/resources` with an H2 in-memory database, specifically for
+   `@SpringBootTest`-based tests (e.g. `IdopontfoglaloApplicationTests`), because the `.env`
+   loading happens in `main()`, which doesn't run during test execution.
+5. **`src/test/java`** – the package structure mirrors `main`, feature by feature.
+6. **A full DTO + Mapper pair for every entity** – once an entity has a relationship to
    another entity, the raw entity can no longer "leak" through the Controller.
-6. **`ertesites/template/`** – email templates (e.g. with Thymeleaf) that
+7. **`ertesites/template/`** – email templates (e.g. with Thymeleaf) that
    `EmailNotificationService` fills in with concrete data.
-7. **Docker (optional, at the end)** – app + Postgres started together with
+8. **Docker (optional, at the end)** – app + Postgres started together with
    `docker-compose`, only relevant if we get that far.
 
-## Current state (2026-08-30)
+## Current state (2026-09-13)
 
-Files that actually exist (mid-migration to feature-based structure):
-- `naptar/entity/Szolgaltatas.java` *(being migrated to `naptar/szolgaltatas/SzolgaltatasEntity.java`)*
-- `naptar/repository/SzolgaltatasRepository.java` *(moving to `naptar/szolgaltatas/`)*
-- `naptar/service/SzolgaltatasService.java` *(moving to `naptar/szolgaltatas/`)*
-- `naptar/controller/SzolgaltatasController.java` *(moving to `naptar/szolgaltatas/`)*
+Files that actually exist (migrated to feature-based structure):
+- `naptar/szolgaltatas/` – `SzolgaltatasEntity`, `SzolgaltatasRepository`, `SzolgaltatasService`,
+  `SzolgaltatasController` (with tests)
+- `naptar/munkavallalo/` – `MunkavallaloEntity`, `MunkavallaloRepository`, `MunkavallaloService`,
+  `MunkavallaloController` (with tests)
+- `naptar/foglalas/` – `FoglalasEntity`, `FoglalasStatusz`, `FoglalasRepository`,
+  `FoglalasService`, `FoglalasController` (with tests)
+- `ugyfel/ugyfel/` – `UgyfelEntity`, `UgyfelRepository`, `UgyfelService`,
+  `UgyfelController` (with tests)
 - `common/exception/GlobalExceptionHandler.java`
+- `src/test/resources/application.properties` – H2 in-memory test configuration
 
 Everything else in the structure above is still a plan.

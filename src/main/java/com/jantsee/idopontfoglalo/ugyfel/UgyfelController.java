@@ -1,4 +1,4 @@
-package com.jantsee.idopontfoglalo.naptar.foglalas;
+package com.jantsee.idopontfoglalo.ugyfel;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,37 +13,37 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/foglalasok")
-public class FoglalasController {
-    private final FoglalasService foglalasService;
+@RequestMapping("/api/ugyfelek")
+public class UgyfelController {
+    private final UgyfelService ugyfelService;
 
-    public FoglalasController(FoglalasService foglalasService) {
-        this.foglalasService = foglalasService;
+    public UgyfelController(UgyfelService ugyfelService) {
+        this.ugyfelService = ugyfelService;
     }
 
     @PostMapping
-    public FoglalasEntity letrehozas(@RequestBody FoglalasEntity uj) {
-        return foglalasService.letrehozas(uj);
+    public UgyfelEntity letrehozas(@RequestBody UgyfelEntity uj) {
+        return ugyfelService.letrehozas(uj);
     }
 
     @GetMapping
-    public List<FoglalasEntity> osszes() {
-        return foglalasService.osszesLekerese();
+    public List<UgyfelEntity> osszes() {
+        return ugyfelService.osszesLekerese();
     }
 
     @GetMapping("/{id}")
-    public FoglalasEntity egyLekerese(@PathVariable Long id) {
-        return foglalasService.lekeresIdAlapjan(id);
+    public UgyfelEntity egyLekerese(@PathVariable Long id) {
+        return ugyfelService.lekeresIdAlapjan(id);
     }
 
     @PutMapping("/{id}")
-    public FoglalasEntity frissites(@PathVariable Long id, @RequestBody FoglalasEntity modositott) {
-        return foglalasService.frissites(id, modositott);
+    public UgyfelEntity frissites(@PathVariable Long id, @RequestBody UgyfelEntity modositott) {
+        return ugyfelService.frissites(id, modositott);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> torles(@PathVariable Long id) {
-        foglalasService.torles(id);
+        ugyfelService.torles(id);
         return ResponseEntity.noContent().build();
     }
 }
