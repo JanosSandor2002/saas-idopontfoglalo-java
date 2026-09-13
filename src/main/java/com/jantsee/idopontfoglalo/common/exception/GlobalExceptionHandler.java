@@ -10,8 +10,20 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> kezelesIllegalArgument(Exception ex){
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> kezelesResourceNotFound(ResourceNotFoundException ex) {
+        Map<String, Object> hibaValasz = Map.of(
+                "timestamp", Instant.now().toString(),
+                "status", HttpStatus.NOT_FOUND.value(),
+                "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
+                "message", ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(hibaValasz);
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<Map<String, Object>> kezelesBusinessRule(BusinessRuleException ex) {
         Map<String, Object> hibaValasz = Map.of(
                 "timestamp", Instant.now().toString(),
                 "status", HttpStatus.BAD_REQUEST.value(),

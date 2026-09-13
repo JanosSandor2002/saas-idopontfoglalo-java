@@ -1,5 +1,7 @@
 package com.jantsee.idopontfoglalo.ugyfel;
 
+import com.jantsee.idopontfoglalo.common.exception.BusinessRuleException;
+import com.jantsee.idopontfoglalo.common.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +16,10 @@ public class UgyfelService {
 
     public UgyfelEntity letrehozas(UgyfelEntity uj) {
         if (uj.getNev() == null || uj.getNev().isBlank()) {
-            throw new IllegalArgumentException("A név nem lehet üres vagy null");
+            throw new BusinessRuleException("A név nem lehet üres vagy null");
         }
         if (uj.getEmail() == null || uj.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Az e-mail cím nem lehet üres vagy null");
+            throw new BusinessRuleException("Az e-mail cím nem lehet üres vagy null");
         }
         return ugyfelRepository.save(uj);
     }
@@ -28,16 +30,16 @@ public class UgyfelService {
 
     public UgyfelEntity lekeresIdAlapjan(Long id) {
         return ugyfelRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Nincs ilyen ügyfél: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Nincs ilyen ügyfél: " + id));
     }
 
     public UgyfelEntity frissites(Long id, UgyfelEntity modositott) {
         UgyfelEntity letezo = lekeresIdAlapjan(id);
         if (modositott.getNev() == null || modositott.getNev().isBlank()) {
-            throw new IllegalArgumentException("A név nem lehet üres vagy null");
+            throw new BusinessRuleException("A név nem lehet üres vagy null");
         }
         if (modositott.getEmail() == null || modositott.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Az e-mail cím nem lehet üres vagy null");
+            throw new BusinessRuleException("Az e-mail cím nem lehet üres vagy null");
         }
         letezo.setNev(modositott.getNev());
         letezo.setEmail(modositott.getEmail());
@@ -47,7 +49,7 @@ public class UgyfelService {
 
     public void torles(Long id) {
         if (!ugyfelRepository.existsById(id)) {
-            throw new IllegalArgumentException("Nincs ilyen ügyfél: " + id);
+            throw new ResourceNotFoundException("Nincs ilyen ügyfél: " + id);
         }
         ugyfelRepository.deleteById(id);
     }

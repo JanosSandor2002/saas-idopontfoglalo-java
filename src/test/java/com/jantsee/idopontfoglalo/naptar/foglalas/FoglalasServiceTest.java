@@ -1,5 +1,7 @@
 package com.jantsee.idopontfoglalo.naptar.foglalas;
 
+import com.jantsee.idopontfoglalo.common.exception.BusinessRuleException;
+import com.jantsee.idopontfoglalo.common.exception.ResourceNotFoundException;
 import com.jantsee.idopontfoglalo.naptar.munkavallalo.MunkavallaloEntity;
 import com.jantsee.idopontfoglalo.naptar.szolgaltatas.SzolgaltatasEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +76,7 @@ class FoglalasServiceTest {
         uj.setSzolgaltatas(null);
 
         assertThatThrownBy(() -> foglalasService.letrehozas(uj))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("A szolgáltatás megadása kötelező");
     }
 
@@ -84,7 +86,7 @@ class FoglalasServiceTest {
         uj.setMunkavallalo(null);
 
         assertThatThrownBy(() -> foglalasService.letrehozas(uj))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("A munkavállaló megadása kötelező");
     }
 
@@ -94,7 +96,7 @@ class FoglalasServiceTest {
         uj.setIdopont(null);
 
         assertThatThrownBy(() -> foglalasService.letrehozas(uj))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Az időpont megadása kötelező");
     }
 
@@ -104,7 +106,7 @@ class FoglalasServiceTest {
         uj.setIdopont(LocalDateTime.now().minusDays(1));
 
         assertThatThrownBy(() -> foglalasService.letrehozas(uj))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(BusinessRuleException.class)
                 .hasMessage("Az időpont nem lehet a múltban");
     }
 
@@ -114,7 +116,7 @@ class FoglalasServiceTest {
         uj.setUgyfelNev("  ");
 
         assertThatThrownBy(() -> foglalasService.letrehozas(uj))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Az ügyfél neve nem lehet üres vagy null");
     }
 
@@ -124,7 +126,7 @@ class FoglalasServiceTest {
         uj.setUgyfelEmail(null);
 
         assertThatThrownBy(() -> foglalasService.letrehozas(uj))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Az ügyfél e-mail címe nem lehet üres vagy null");
     }
 
@@ -154,7 +156,7 @@ class FoglalasServiceTest {
         when(foglalasRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> foglalasService.lekeresIdAlapjan(99L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Nincs ilyen foglalás: 99");
     }
 
@@ -184,7 +186,7 @@ class FoglalasServiceTest {
                 .build();
 
         assertThatThrownBy(() -> foglalasService.frissites(1L, modositott))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(BusinessRuleException.class)
                 .hasMessage("Az időpont nem lehet a múltban");
     }
 

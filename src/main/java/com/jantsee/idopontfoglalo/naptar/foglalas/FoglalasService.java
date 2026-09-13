@@ -1,5 +1,7 @@
 package com.jantsee.idopontfoglalo.naptar.foglalas;
 
+import com.jantsee.idopontfoglalo.common.exception.BusinessRuleException;
+import com.jantsee.idopontfoglalo.common.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,22 +17,22 @@ public class FoglalasService {
 
     public FoglalasEntity letrehozas(FoglalasEntity uj) {
         if (uj.getSzolgaltatas() == null) {
-            throw new IllegalArgumentException("A szolgáltatás megadása kötelező");
+            throw new BusinessRuleException("A szolgáltatás megadása kötelező");
         }
         if (uj.getMunkavallalo() == null) {
-            throw new IllegalArgumentException("A munkavállaló megadása kötelező");
+            throw new BusinessRuleException("A munkavállaló megadása kötelező");
         }
         if (uj.getIdopont() == null) {
-            throw new IllegalArgumentException("Az időpont megadása kötelező");
+            throw new BusinessRuleException("Az időpont megadása kötelező");
         }
         if (uj.getIdopont().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Az időpont nem lehet a múltban");
+            throw new BusinessRuleException("Az időpont nem lehet a múltban");
         }
         if (uj.getUgyfelNev() == null || uj.getUgyfelNev().isBlank()) {
-            throw new IllegalArgumentException("Az ügyfél neve nem lehet üres vagy null");
+            throw new BusinessRuleException("Az ügyfél neve nem lehet üres vagy null");
         }
         if (uj.getUgyfelEmail() == null || uj.getUgyfelEmail().isBlank()) {
-            throw new IllegalArgumentException("Az ügyfél e-mail címe nem lehet üres vagy null");
+            throw new BusinessRuleException("Az ügyfél e-mail címe nem lehet üres vagy null");
         }
         uj.setStatusz(FoglalasStatusz.FOGLALT);
         return foglalasRepository.save(uj);
@@ -42,16 +44,16 @@ public class FoglalasService {
 
     public FoglalasEntity lekeresIdAlapjan(Long id) {
         return foglalasRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Nincs ilyen foglalás: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Nincs ilyen foglalás: " + id));
     }
 
     public FoglalasEntity frissites(Long id, FoglalasEntity modositott) {
         FoglalasEntity letezo = lekeresIdAlapjan(id);
         if (modositott.getIdopont() == null) {
-            throw new IllegalArgumentException("Az időpont megadása kötelező");
+            throw new BusinessRuleException("Az időpont megadása kötelező");
         }
         if (modositott.getIdopont().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Az időpont nem lehet a múltban");
+            throw new BusinessRuleException("Az időpont nem lehet a múltban");
         }
         letezo.setIdopont(modositott.getIdopont());
         if (modositott.getMunkavallalo() != null) {

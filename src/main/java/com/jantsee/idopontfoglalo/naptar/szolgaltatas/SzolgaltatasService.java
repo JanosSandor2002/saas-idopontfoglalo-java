@@ -1,5 +1,7 @@
 package com.jantsee.idopontfoglalo.naptar.szolgaltatas;
 
+import com.jantsee.idopontfoglalo.common.exception.BusinessRuleException;
+import com.jantsee.idopontfoglalo.common.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +16,7 @@ public class SzolgaltatasService {
 
     public SzolgaltatasEntity letrehozas(SzolgaltatasEntity uj) {
         if (uj.getAr() == null || uj.getAr() <= 0) {
-            throw new IllegalArgumentException("Az ár nem lehet 0 vagy negatív");
+            throw new BusinessRuleException("Az ár nem lehet 0 vagy negatív");
         }
         return szolgaltatasRepository.save(uj);
     }
@@ -25,19 +27,19 @@ public class SzolgaltatasService {
 
     public SzolgaltatasEntity lekeresIdAlapjan(Long id) {
         return szolgaltatasRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Nincs ilyen szolgáltatás: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Nincs ilyen szolgáltatás: " + id));
     }
 
     public SzolgaltatasEntity frissites(Long id, SzolgaltatasEntity modositott) {
         SzolgaltatasEntity letezo = lekeresIdAlapjan(id);
         if (modositott.getAr() == null || modositott.getAr() <= 0) {
-            throw new IllegalArgumentException("Az ár nem lehet 0 vagy negatív");
+            throw new BusinessRuleException("Az ár nem lehet 0 vagy negatív");
         }
         if (modositott.getNev() == null || modositott.getNev().isBlank()) {
-            throw new IllegalArgumentException("A név nem lehet üres vagy null");
+            throw new BusinessRuleException("A név nem lehet üres vagy null");
         }
         if (modositott.getIdotartamPerc() == null || modositott.getIdotartamPerc() <= 0) {
-            throw new IllegalArgumentException("Az időtartam nem lehet 0 vagy negatív");
+            throw new BusinessRuleException("Az időtartam nem lehet 0 vagy negatív");
         }
         letezo.setNev(modositott.getNev());
         letezo.setAr(modositott.getAr());
@@ -47,7 +49,7 @@ public class SzolgaltatasService {
 
     public void torles(Long id) {
         if (!szolgaltatasRepository.existsById(id)) {
-            throw new IllegalArgumentException("Nincs ilyen szolgáltatás: " + id);
+            throw new ResourceNotFoundException("Nincs ilyen szolgáltatás: " + id);
         }
         szolgaltatasRepository.deleteById(id);
     }
